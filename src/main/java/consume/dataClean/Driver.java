@@ -10,10 +10,7 @@ import java.io.IOException;
 public class Driver {
 
     private static String origialConsumeFile = "D:\\GraduationThesis\\consumeCombine2007_2015.csv";
-
-
     public static void main(String[] args) throws IOException {
-
         ConsumeClean consumeClean = new ConsumeClean(origialConsumeFile);
     }
 
