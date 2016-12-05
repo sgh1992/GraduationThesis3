@@ -40,6 +40,19 @@ public class ConsumeRecord implements  Comparable<ConsumeRecord>{
         this.year = year;
     }
 
+    public void update(ConsumeRecord o){
+
+        this.studentID = o.studentID;
+        this.type = o.type;
+        this.place = o.place;
+        this.cardNo = o.cardNo;
+        this.time = o.time;
+        this.amount = o.amount;
+        this.balance = o.balance;
+        this.term = o.term;
+        this.year = o.year;
+    }
+
     public String getStudentID(){
         return studentID;
     }

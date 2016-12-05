@@ -50,6 +50,8 @@ public class SortConsumeClean {
 
     private static String SORTED = "sorted.csv";
 
+    private static String removeDeuplicate = "removeDeuplicate.csv";//去重.
+
     public SortConsumeClean(String rootFile, String tempDir){
 
         this.rootFile = rootFile;
@@ -60,6 +62,18 @@ public class SortConsumeClean {
         return sort(rootFile,tempDir);
     }
 
+    public File sortAndDup() throws IOException {
+        File sortedFile = sort();
+        return removeDup(sortedFile);
+    }
+
+    /**
+     * 排序.
+     * @param rootFile
+     * @param tempDir
+     * @return
+     * @throws IOException
+     */
     public File sort(String rootFile, String tempDir) throws IOException {
 
         List<File> splitLists = Tool.splitFile(rootFile,tempDir); //已经排好序了.
@@ -111,12 +125,53 @@ public class SortConsumeClean {
         return target;
     }
 
+    /**
+     * 去重
+     * @param sortedFile
+     * @return
+     * @throws IOException
+     */
+    public File removeDup(File sortedFile) throws IOException {
+
+        File result = new File(sortedFile.getParent(),sortedFile.getName().substring(0,sortedFile.getName().indexOf(".")) + "_" + removeDeuplicate);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(result));
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sortedFile)));
+        String str = null;
+        ConsumeRecord parser = new ConsumeRecord();
+        ConsumeRecord before = null;
+        while ((str = reader.readLine()) != null){
+            if(parser.parser(str)) {
+                if (!(before != null && before.getStudentID().equals(parser.getStudentID()) &&
+                        before.getTime().equals(parser.getTime()) && before.getCardNo().equals(parser.getCardNo()))) {
+
+                    if(before != null){
+                        writer.write(before.toString());
+                        writer.newLine();
+                    }
+
+                }
+
+                if(before == null)
+                    before = new ConsumeRecord();
+                before.update(parser);
+            }
+        }
+        writer.write(parser.toString());
+        writer.newLine();
+
+        reader.close();
+        writer.close();
+        return result;
+    }
+
     public static void main(String[] args) throws IOException {
 
         String file = "D:\\GraduationThesis\\consume_clean_step1.csv";
         String tempDir = "D:/GraduationThesis/consumeTemp";
         SortConsumeClean sortConsumeClean = new SortConsumeClean(file,tempDir);
-        sortConsumeClean.sort();
-
+        //sortConsumeClean.sort();
+        String sortedFile = "D:/GraduationThesis/consume_clean_step1_sorted.csv";
+        sortConsumeClean.removeDup(new File(sortedFile));
     }
 }
