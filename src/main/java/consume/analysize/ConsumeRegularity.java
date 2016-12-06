@@ -49,6 +49,7 @@ public class ConsumeRegularity {
                             String.valueOf(parser.getTerm()),cycle);
                 regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
                         parser.getTime(),parser.getType());
+
             }
         }
         write(regularityRecord,writer);
