@@ -149,7 +149,6 @@ public class SortConsumeClean {
                         writer.write(before.toString());
                         writer.newLine();
                     }
-
                 }
 
                 if(before == null)
