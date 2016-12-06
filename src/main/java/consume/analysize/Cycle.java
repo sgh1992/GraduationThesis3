@@ -12,6 +12,8 @@ import java.util.Set;
  */
 public interface Cycle {
 
+    List<String> getInteral();
+
     /**
      * 获得在一个周期内划分的时间段.
      * @return

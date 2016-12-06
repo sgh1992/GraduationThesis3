@@ -13,8 +13,12 @@ public class DayCycle implements Cycle{
 
     private List<String> timeList;
 
-    public List<String> getTimeList(){
+    public List<String> getInteral(){
         return timeList;
+    }
+
+    public DayCycle(){
+        timeList = divide();
     }
 
     @Override
@@ -78,6 +82,8 @@ public class DayCycle implements Cycle{
         String[] args = time.split(" ", -1);
         if(args.length == 2)
             timeList.add(args[1].trim());
+        else
+            return null;
         Collections.sort(timeList);
         int index = timeList.indexOf(args[1].trim());
         index = index % 48;
