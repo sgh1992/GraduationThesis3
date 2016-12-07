@@ -1,6 +1,7 @@
 package consume.tool;
 
 import org.joda.time.DateTime;
+import org.joda.time.Hours;
 import org.joda.time.IllegalFieldValueException;
 import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
@@ -15,6 +16,8 @@ import java.util.*;
 public class Tool {
 
     private static String consumePlace = "D:\\GraduationThesis\\consumePlace.txt";
+
+    private static String graduateworkinfo = "D:\\GraduationThesis\\graduateworkinfo_safety.csv";
 
     private static DateTimeFormatter format1 = DateTimeFormat.forPattern("yyyyMMdd");
 
@@ -416,6 +419,32 @@ public class Tool {
 
         for(File file : fileList)
             file.delete();
+    }
+
+    public static int hoursBetween(String start, String end){
+        DateTime startTime = format2.parseDateTime(start);
+        DateTime endTime = format2.parseDateTime(end);
+        return Hours.hoursBetween(startTime,endTime).getHours();
+    }
+
+    public static HashMap<String,String> getStudentWork() throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(graduateworkinfo)));
+
+        String str = null;
+
+        GraduateWorkParser parser = new GraduateWorkParser();
+
+        HashMap<String,String> workMap = new HashMap<>();
+
+        while ((str = reader.readLine()) != null){
+            if(parser.parser(str)) {
+                String work = parser.getWork().equals("保研") ? "录研" : parser.getWork();
+                workMap.put(parser.getStudentID(), work);
+            }
+        }
+
+        return workMap;
     }
 
 

@@ -107,6 +107,8 @@ public class ConsumeRecord implements  Comparable<ConsumeRecord>{
             return false;
         }
         year = args[8];
+        if(term > 8)
+            return false;
         return true;
     }
 

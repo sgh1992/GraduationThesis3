@@ -14,7 +14,14 @@ public class DayCycle implements Cycle{
     private List<String> timeList;
 
     public List<String> getInteral(){
-        return timeList;
+
+        List<String> interalList = new ArrayList<>();
+        for(int i = 0; i < timeList.size(); ++i){
+            String interal = timeList.get(i % timeList.size()) + "-" + timeList.get((i + 1) % timeList.size());
+            interalList.add(interal);
+        }
+
+        return interalList;
     }
 
     public DayCycle(){
