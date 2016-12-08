@@ -86,7 +86,11 @@ public class ConsumeRegularity {
                 if(regularityRecord == null)
                     regularityRecord = new ConsumeRegularityRecord(parser.getStudentID(),
                             String.valueOf(parser.getTerm()), cycle);
-
+//                if(parser.getStudentID().equals("200921010722") && parser.getType().equals("mess")) {
+//                    System.err.println("Debug!");
+//                    if(parser.getTime().split(" ")[1].compareTo("0060") < 0)
+//                        System.err.println(parser.getTime());
+//                }
 
                 if(!regularityRecord.exist(parser.getStudentID(), String.valueOf(parser.getTerm()))) {
                     write(regularityRecord, writer);
@@ -145,6 +149,7 @@ public class ConsumeRegularity {
         String consumeClean = "D:/GraduationThesis/consume_clean_step1_sorted_removeDeuplicate.csv";
         ConsumeRegularity regularity = new ConsumeRegularity(consumeClean,new DayCycle());
         //regularity.regularityMedian();
-        regularity.regularityWithWork(new File("D:\\GraduationThesis\\media.csv"));
+        //regularity.regularityWithWork(new File("D:\\GraduationThesis\\media.csv"));
+        regularity.regularity();
     }
 }

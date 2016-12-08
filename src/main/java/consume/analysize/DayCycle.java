@@ -3,7 +3,6 @@ package consume.analysize;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * Created by sghipr on 2016/12/6.
@@ -87,17 +86,32 @@ public class DayCycle implements Cycle{
     @Override
     public String getInteral(String time) {
         String[] args = time.split(" ", -1);
+        int size = timeList.size();
         if(args.length == 2)
             timeList.add(args[1].trim());
         else
             return null;
         Collections.sort(timeList);
         int index = timeList.indexOf(args[1].trim());
-        index = index % 48;
         timeList.remove(index);
+
+        index = index % size;
         if(index == 0)
-            return timeList.get(47) + "-" + timeList.get(0);
+            return timeList.get(size - 1) + "-" + timeList.get(0);
         else
             return timeList.get(index - 1) + "-" + timeList.get(index);
     }
+
+    public static void main(String[] args){
+        DayCycle dayCycle = new DayCycle();
+        System.err.println(dayCycle.getInteral().size());
+        for(String string : dayCycle.getInteral())
+            System.err.println(string);
+
+        System.err.println(dayCycle.getInteral("201011 070825"));
+    }
+
+
+
+
 }
