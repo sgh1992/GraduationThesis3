@@ -96,6 +96,7 @@ public class ConsumeRegularity {
                     write(regularityRecord, writer);
 
                     regularityRecord = new ConsumeRegularityRecord(parser.getStudentID(),
+
                             String.valueOf(parser.getTerm()),cycle);
 
                     beforeTime = null;
