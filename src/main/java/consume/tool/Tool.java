@@ -23,6 +23,8 @@ public class Tool {
 
     private static DateTimeFormatter format2 = DateTimeFormat.forPattern("yyyyMMdd HHmmss");
 
+    private static Locale locale =  new Locale("en");
+
     private static long splitSize = 10000000;
 
     public static HashMap<String,ConsumeNameAndType> getSimplePlace() throws IOException {
@@ -345,6 +347,11 @@ public class Tool {
         return true;
     }
 
+    public static String getDayOfWeek(String time){
+
+        return format1.parseDateTime(time).dayOfWeek().getAsText(locale);
+    }
+
     public static List<File> splitFile(String file,String targetDir) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -440,10 +447,11 @@ public class Tool {
         while ((str = reader.readLine()) != null){
             if(parser.parser(str)) {
                 String work = parser.getWork().equals("保研") ? "录研" : parser.getWork();
+                if(work.equals("出国出境"))
+                    work = "出国深造";
                 workMap.put(parser.getStudentID(), work);
             }
         }
-
         return workMap;
     }
 

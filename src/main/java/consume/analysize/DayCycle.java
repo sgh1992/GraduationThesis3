@@ -19,7 +19,6 @@ public class DayCycle implements Cycle{
             String interal = timeList.get(i % timeList.size()) + "-" + timeList.get((i + 1) % timeList.size());
             interalList.add(interal);
         }
-
         return interalList;
     }
 

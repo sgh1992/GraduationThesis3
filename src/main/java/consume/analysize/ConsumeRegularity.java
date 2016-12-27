@@ -18,7 +18,7 @@ public class ConsumeRegularity {
 
     private static String median = "media.csv"; //中间处理文件.
 
-    private static String RegularityWithWork = "consumeRegularityWithWork.csv";
+    private static String RegularityWithWork = "consumeRegularityWithWork_DaySingleCount.csv";
 
     private Cycle cycle;
 
@@ -86,11 +86,6 @@ public class ConsumeRegularity {
                 if(regularityRecord == null)
                     regularityRecord = new ConsumeRegularityRecord(parser.getStudentID(),
                             String.valueOf(parser.getTerm()), cycle);
-//                if(parser.getStudentID().equals("200921010722") && parser.getType().equals("mess")) {
-//                    System.err.println("Debug!");
-//                    if(parser.getTime().split(" ")[1].compareTo("0060") < 0)
-//                        System.err.println(parser.getTime());
-//                }
 
                 if(!regularityRecord.exist(parser.getStudentID(), String.valueOf(parser.getTerm()))) {
                     write(regularityRecord, writer);
@@ -105,8 +100,9 @@ public class ConsumeRegularity {
 
                 //连续的相同的行为，则以第一次刷卡的时间为准.
                 if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 1)
-                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
-                        beforeTime,parser.getType());
+//                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
+//                        beforeTime,parser.getType()) //根据策略的不同而有所不同.
+                      continue;
                 else {
                     regularityRecord.update(parser.getStudentID(), String.valueOf(parser.getTerm()),
                             parser.getTime(), parser.getType());
