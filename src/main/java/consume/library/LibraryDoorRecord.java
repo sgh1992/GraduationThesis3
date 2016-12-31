@@ -35,8 +35,8 @@ public class LibraryDoorRecord {
         cardid = args[1].replace("\"","");
         userName = args[2].replace("\"","");
         college = args[3].replace("\"","");
-        status = args[4].replace("\"","");
-        rank = args[5].replace("\"","");
+        rank = args[4].replace("\"","");
+        status = args[5].replace("\"","");
         passway = args[6].replace("\"","");
         passtime = args[7].replace("\"","");
         reportTime = args[8].replace("\"","");

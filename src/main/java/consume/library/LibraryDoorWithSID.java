@@ -57,8 +57,8 @@ public class LibraryDoorWithSID {
     }
 
     private String studentInfoFile = "D:\\GraduationThesis\\studentnameinfo.txt";
-    private String libraryDoorFile = "D:\\GraduationThesis\\librarydoor2013_2014.txt";
-    private static String LIBRARYDOORWITHID = "D:\\GraduationThesis\\librarydoorWithStudentID.csv";
+    private String libraryDoorFile = "D:\\GraduationThesis\\librarydoor2009_2014_refactor.csv";
+    private static String LIBRARYDOORWITHID = "librarydoorWithStudentID.csv";
 
     public LibraryDoorWithSID(){}
 
@@ -75,12 +75,21 @@ public class LibraryDoorWithSID {
         BufferedWriter writer = new BufferedWriter(new FileWriter(dir));
         String str = null;
         StringBuilder result = new StringBuilder();
-        int wrongNums = 0;
         YearAndTerm yearAndTerm = new YearAndTerm();
+        Set<String> inSet = new HashSet<>();
+        for(int i = 5; i < 10; i++)
+            inSet.add(String.valueOf(i));
+
+        Set<String> outSet = new HashSet<>();
+        for(int i = 1; i < 5; i++)
+            outSet.add(String.valueOf(i));
+
         while ((str = reader.readLine()) != null){
             String studentID = null;
             if(parser.parser(str.trim())){
-                String time = parser.getPasstime().replace("\\-","").substring(0,8);
+
+                String time = parser.getPasstime().replace("-","").substring(0,8);//日
+                String hourTime = parser.getPasstime().replace("-","").replace(":","").substring(0,15);//小时
                 if(parser.getStudentID().length() != 0){
                     studentID = parser.getStudentID();
                 }
@@ -90,8 +99,16 @@ public class LibraryDoorWithSID {
                     }
                 if(studentID != null){
                     if(Tool.getYearTerm(studentID,time,yearAndTerm)) {
+                        String passWay = parser.getPassway().trim();
+                        if(inSet.contains(passWay) || passWay.contains("进门"))
+                            passWay = "in";
+                        else if(outSet.contains(passWay) || passWay.contains("出门"))
+                            passWay = "out";
+
+                        else
+                            continue;
                         result.append(studentID).append(",").append(parser.getUserName()).append(",")
-                                .append(parser.getPassway()).append(",").append(parser.getPasstime()).append(",")
+                                .append(passWay).append(",").append(hourTime).append(",").append(parser.getCollege()).append(",")
                                 .append(yearAndTerm.getYear()).append(",").append(yearAndTerm.getTerm());
                         writer.write(result.toString());
                         writer.newLine();
@@ -113,8 +130,9 @@ public class LibraryDoorWithSID {
             Set<String> studentIDSet = map.get(key);
             for(String studentID : studentIDSet){
                 String year = studentID.startsWith("2010") ? "20100901" : "20090901";
-                if(time.compareTo(year) < 0)
-                    return null;
+                String endYear = studentID.startsWith("2010") ? "20140801" : "20130801";
+                if(time.compareTo(year) < 0 || time.compareTo(endYear) > 0)
+                    continue;
                 nums++;
                 SID = studentID;
             }

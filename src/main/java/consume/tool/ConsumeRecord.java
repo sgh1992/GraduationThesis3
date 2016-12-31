@@ -1,7 +1,5 @@
 package consume.tool;
 
-import java.net.StandardSocketOptions;
-
 /**
  * Created by sghipr on 2016/12/4.
  */
