@@ -1,6 +1,7 @@
 package consume.dataClean;
 
 import consume.tool.ConsumeRecord;
+import consume.tool.SortBase;
 import consume.tool.Tool;
 import java.io.*;
 import java.util.ArrayList;
@@ -13,33 +14,33 @@ import java.util.PriorityQueue;
  *
  *主要思想:小文件先排好序，然后再针对各个已经排好序的小文件利用优先队列进行排序.
  */
-public class SortConsumeClean {
+public class SortCleanData {
 
     class SortRecord implements Comparable<SortRecord>{
 
         private int index;
-        private ConsumeRecord consumeRecord;
+        private SortBase sortBase;
 
-        public SortRecord(ConsumeRecord consumeRecord, int index){
+        public SortRecord(SortBase sortBase, int index){
             this.index = index;
-            this.consumeRecord = consumeRecord;
+            this.sortBase = sortBase;
         }
 
         public int hashCode(){
-            return consumeRecord.hashCode() + index * 127;
+            return sortBase.hashCode() + index * 127;
         }
 
         public int getIndex(){
             return index;
         }
 
-        public ConsumeRecord getConsumeRecord(){
-            return consumeRecord;
+        public SortBase getSortBase(){
+            return sortBase;
         }
 
         @Override
         public int compareTo(SortRecord o) {
-            return consumeRecord.compareTo(o.consumeRecord);
+            return sortBase.compareTo(o.sortBase);
         }
     }
 
@@ -47,18 +48,20 @@ public class SortConsumeClean {
 
     private String tempDir;
 
+    private SortBase parser;
+
     private static String SORTED = "sorted.csv";
 
     private static String removeDeuplicate = "removeDeuplicate.csv";//去重.
 
-    public SortConsumeClean(String rootFile, String tempDir){
-
+    public SortCleanData(String rootFile, String tempDir, SortBase parser){
         this.rootFile = rootFile;
         this.tempDir = tempDir;
+        this.parser = parser;
     }
 
     public File sort() throws IOException {
-        return sort(rootFile,tempDir);
+        return sort(rootFile,tempDir,parser);
     }
 
     public File sortAndDup() throws IOException {
@@ -73,9 +76,9 @@ public class SortConsumeClean {
      * @return
      * @throws IOException
      */
-    public File sort(String rootFile, String tempDir) throws IOException {
+    public File sort(String rootFile, String tempDir,SortBase parser) throws IOException {
 
-        List<File> splitLists = Tool.splitFile(rootFile,tempDir); //已经排好序了.
+        List<File> splitLists = Tool.splitFile(rootFile,tempDir,parser); //已经排好序了.
         PriorityQueue<SortRecord> priorityQueue = new PriorityQueue<>();
 
         List<BufferedReader> readerList = new ArrayList<>();
@@ -93,18 +96,17 @@ public class SortConsumeClean {
             readerList.add(reader);
         }
 
-        ConsumeRecord parser = new ConsumeRecord();
+        //ConsumeRecord parser = new ConsumeRecord();
         String record = null;
         for(int i = 0; i < readerList.size(); ++i){
             if((record = readerList.get(i).readLine()) != null){
                 if(parser.parser(record))
-                    priorityQueue.add(new SortRecord(new ConsumeRecord(parser.getStudentID(),parser.getType(),parser.getPlace(),
-                            parser.getCardNo(),parser.getTime(),parser.getAmount(),parser.getBalance(),parser.getTerm(),parser.getYear()),i));
+                    priorityQueue.add(new SortRecord(parser.create(parser),i));
             }
         }
         while (!priorityQueue.isEmpty()){
             SortRecord sortRecord = priorityQueue.poll();
-            writer.write(sortRecord.getConsumeRecord().toString());
+            writer.write(sortRecord.getSortBase().toString());
             writer.newLine();
 
             int index = sortRecord.getIndex();
@@ -114,8 +116,7 @@ public class SortConsumeClean {
             }
             else
                 if(parser.parser(record))
-                    priorityQueue.add(new SortRecord(new ConsumeRecord(parser.getStudentID(),parser.getType(),parser.getPlace(),
-                            parser.getCardNo(),parser.getTime(),parser.getAmount(),parser.getBalance(),parser.getTerm(),parser.getYear()),index));
+                    priorityQueue.add(new SortRecord(parser.create(parser),index));
         }
         writer.close();
 
@@ -167,7 +168,7 @@ public class SortConsumeClean {
 
         String file = "D:\\GraduationThesis\\consume_clean_step1.csv";
         String tempDir = "D:/GraduationThesis/consumeTemp";
-        SortConsumeClean sortConsumeClean = new SortConsumeClean(file,tempDir);
+        SortCleanData sortConsumeClean = new SortCleanData(file,tempDir,new ConsumeRecord());
         //sortConsumeClean.sort();
         String sortedFile = "D:/GraduationThesis/consume_clean_step1_sorted.csv";
         sortConsumeClean.removeDup(new File(sortedFile));

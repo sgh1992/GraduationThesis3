@@ -1,6 +1,9 @@
 package consume.analysize;
 
+import consume.library.LibraryDoorRegularity;
+import consume.library.LibraryDoorWithSIDRecord;
 import consume.tool.ConsumeRecord;
+import consume.tool.SortBase;
 import consume.tool.Tool;
 
 import java.io.*;
@@ -11,20 +14,32 @@ import java.util.HashMap;
  * 计算消费数据的行为规律性.
  * 包括学生的早餐，中午餐，晚餐，洗澡，洗衣服的行为规律性.
  *
+ * 这里的行为规律性可以是学生一卡通消费，也可以是图书馆门禁，宿舍门禁等数据.
+ * 计算方式是一致的。
+ * 注意设计模式的使用.
+ *
  */
-public class ConsumeRegularity {
+public class StudentRegularity {
 
     private String consumeClean; //"D:/GraduationThesis/consume_clean_step1_sorted_removeDeuplicate.csv";
 
-    private static String median = "media.csv"; //中间处理文件.
+    private static String median = "_media.csv"; //中间处理文件.
 
-    private static String RegularityWithWork = "consumeRegularityWithWork_DaySingleCount.csv";
+    private static String RegularityWithWork = "_regularityWithWork.csv";
+
+    private String style; //consume or librarydoor or dormdoor
 
     private Cycle cycle;
 
-    public ConsumeRegularity(String consumeClean,Cycle cycle){
+    private SortBase parser;
+
+    public StudentRegularity(String consumeClean, Cycle cycle, SortBase parser, String style){
         this.consumeClean = consumeClean;
         this.cycle = cycle;
+        this.parser = parser;
+        this.style = style;
+        median = style + median;
+        RegularityWithWork = style + RegularityWithWork;
     }
 
     public File regularity() throws IOException {
@@ -33,7 +48,7 @@ public class ConsumeRegularity {
     }
 
     public File regularityMedian() throws IOException {
-        return regularityMedian(consumeClean,median);
+        return regularityMedian(consumeClean,median,parser);
     }
 
 
@@ -64,7 +79,15 @@ public class ConsumeRegularity {
 
     }
 
-    public File regularityMedian(String consumeClean,String median) throws IOException {
+    /**
+     *
+     * @param consumeClean
+     * @param median
+     * @param parser
+     * @return
+     * @throws IOException
+     */
+    public File regularityMedian(String consumeClean, String median, SortBase parser) throws IOException {
 
         File root = new File(consumeClean);
         File target = new File(root.getParent(),median);
@@ -73,7 +96,7 @@ public class ConsumeRegularity {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(root)));
 
         String str = null;
-        ConsumeRecord parser = new ConsumeRecord();
+        //ConsumeRecord parser = new ConsumeRecord();
         ConsumeRegularityRecord regularityRecord = null;
 
         //连续的相同的行为，则以第一次刷卡的时间为准.
@@ -98,10 +121,14 @@ public class ConsumeRegularity {
                 }
 
                 //连续的相同的行为，则以第一次刷卡的时间为准.
+                if(style.equals(LibraryDoorRegularity.LibraryStyle)){
+                    if(((LibraryDoorWithSIDRecord)parser).getStatus().equals("out"))
+                        continue;
+                }
                 if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 1)
-//                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
-//                        beforeTime,parser.getType()) //根据策略的不同而有所不同.
-                      continue;
+                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
+                        beforeTime,parser.getType());//根据策略的不同而有所不同.
+//                      continue;
                 else {
                     regularityRecord.update(parser.getStudentID(), String.valueOf(parser.getTerm()),
                             parser.getTime(), parser.getType());
@@ -143,7 +170,7 @@ public class ConsumeRegularity {
     public static void main(String[] args) throws IOException {
 
         String consumeClean = "D:/GraduationThesis/consume_clean_step1_sorted_removeDeuplicate.csv";
-        ConsumeRegularity regularity = new ConsumeRegularity(consumeClean,new DayCycle());
+        StudentRegularity regularity = new StudentRegularity(consumeClean,new DayCycle(),new ConsumeRecord(),"consume");
         //regularity.regularityMedian();
         //regularity.regularityWithWork(new File("D:\\GraduationThesis\\media.csv"));
         regularity.regularity();

@@ -9,4 +9,14 @@ public interface SortBase extends Comparable<SortBase>{
 
     boolean parser(String records);
 
+    SortBase create(SortBase o);
+
+    int getTerm();
+
+    String getStudentID();
+
+    String getType();
+
+    String getTime();
+
 }

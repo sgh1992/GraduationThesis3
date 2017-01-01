@@ -38,6 +38,18 @@ public class ConsumeRecord implements SortBase{
         this.year = year;
     }
 
+    public ConsumeRecord(ConsumeRecord o){
+        this.studentID = o.studentID;
+        this.type = o.type;
+        this.place = o.place;
+        this.cardNo = o.cardNo;
+        this.time = o.time;
+        this.amount = o.amount;
+        this.balance = o.balance;
+        this.term = o.term;
+        this.year = o.year;
+    }
+
     public void update(ConsumeRecord o){
 
         this.studentID = o.studentID;
@@ -108,6 +120,13 @@ public class ConsumeRecord implements SortBase{
         if(term > 8)
             return false;
         return true;
+    }
+
+    @Override
+    public SortBase create(SortBase o) {
+
+        ConsumeRecord other = (ConsumeRecord)o;
+        return new ConsumeRecord(other);
     }
 
     public int hashCode(){

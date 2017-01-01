@@ -352,7 +352,7 @@ public class Tool {
         return format1.parseDateTime(time).dayOfWeek().getAsText(locale);
     }
 
-    public static List<File> splitFile(String file,String targetDir) throws IOException {
+    public static List<File> splitFile(String file,String targetDir, SortBase parser) throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         String str = null;
@@ -374,15 +374,15 @@ public class Tool {
             targetFile.getParentFile().mkdirs();
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile));
-        List<ConsumeRecord> recordList = new ArrayList<>();
-        ConsumeRecord parser = new ConsumeRecord();
+        List<SortBase> recordList = new ArrayList<>();
+        //ConsumeRecord parser = new ConsumeRecord();
 
         long num = 1;
         while ((str = reader.readLine()) != null){
 
             if(num % splitSize == 0){
                 Collections.sort(recordList);//每次分裂小文件的时候都需要将之排好序
-                for(ConsumeRecord record : recordList){
+                for(SortBase record : recordList){
                     writer.write(record.toString());
                     writer.newLine();
                 }
@@ -398,15 +398,14 @@ public class Tool {
             }
 
             if(parser.parser(str)){
-                recordList.add(new ConsumeRecord(parser.getStudentID(),parser.getType(),parser.getPlace(),parser.getCardNo(),
-                        parser.getTime(),parser.getAmount(),parser.getBalance(),parser.getTerm(),parser.getYear()));
+                recordList.add(parser.create(parser));
                 num++;
             }
         }
 
         //注意最后一次的数据要写进去
         Collections.sort(recordList);//每次分裂小文件的时候都需要将之排好序
-        for(ConsumeRecord record : recordList){
+        for(SortBase record : recordList){
             writer.write(record.toString());
             writer.newLine();
         }
@@ -472,7 +471,7 @@ public class Tool {
 
         String file = "D:\\GraduationThesis\\consume_clean_step1.csv";
         String targetDir = "D:/GraduationThesis/consumeTemp";
-        splitFile(file,targetDir);
+        splitFile(file,targetDir,new ConsumeRecord());
 
     }
 }
