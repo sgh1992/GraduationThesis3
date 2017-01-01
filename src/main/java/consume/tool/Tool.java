@@ -402,8 +402,6 @@ public class Tool {
                         parser.getTime(),parser.getAmount(),parser.getBalance(),parser.getTerm(),parser.getYear()));
                 num++;
             }
-//            if(num % 1000 == 0)
-//                System.err.println(num);
         }
 
         //注意最后一次的数据要写进去

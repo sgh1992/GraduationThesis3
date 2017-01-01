@@ -4,6 +4,8 @@ import java.util.*;
 
 /**
  * Created by sghipr on 2016/12/6.
+ * 只要是计算学生的行为熵就可以使用这个数据结构.
+ * 包括一卡通消费与图书錧门禁数据.
  */
 public class ConsumeRegularityRecord {
 

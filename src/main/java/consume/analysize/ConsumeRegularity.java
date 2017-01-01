@@ -82,7 +82,7 @@ public class ConsumeRegularity {
 
         while ((str = reader.readLine()) != null){
             if(parser.parser(str)){
-                //inital ,read first
+                //inital,read first
                 if(regularityRecord == null)
                     regularityRecord = new ConsumeRegularityRecord(parser.getStudentID(),
                             String.valueOf(parser.getTerm()), cycle);

@@ -3,7 +3,7 @@ package consume.tool;
 /**
  * Created by sghipr on 2016/12/4.
  */
-public class ConsumeRecord implements  Comparable<ConsumeRecord>{
+public class ConsumeRecord implements SortBase{
 
     private String studentID;
 
@@ -115,14 +115,15 @@ public class ConsumeRecord implements  Comparable<ConsumeRecord>{
                 + (int)amount  + (int)balance + term + year.hashCode();
     }
 
-    @Override
-    public int compareTo(ConsumeRecord o) {
-        return studentID.equals(o.studentID) ?
-                time.compareTo(o.time) : studentID.compareTo(o.studentID);
-    }
-
     public String toString(){
        return studentID + "," + type + "," + place + "," + cardNo + "," + time + ","
                + amount + "," + balance + "," + term + "," + year;
+    }
+
+    @Override
+    public int compareTo(SortBase others) {
+        ConsumeRecord o = (ConsumeRecord)others;
+        return studentID.equals(o.studentID) ?
+                time.compareTo(o.time) : studentID.compareTo(o.studentID);
     }
 }

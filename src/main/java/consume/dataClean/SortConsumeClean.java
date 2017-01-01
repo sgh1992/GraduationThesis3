@@ -18,7 +18,6 @@ public class SortConsumeClean {
     class SortRecord implements Comparable<SortRecord>{
 
         private int index;
-
         private ConsumeRecord consumeRecord;
 
         public SortRecord(ConsumeRecord consumeRecord, int index){

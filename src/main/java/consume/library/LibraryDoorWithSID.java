@@ -117,7 +117,6 @@ public class LibraryDoorWithSID {
                 }
             }
         }
-
         reader.close();
         writer.close();
         return dir;
@@ -178,5 +177,4 @@ public class LibraryDoorWithSID {
         LibraryDoorWithSID libraryDoorWithSID = new LibraryDoorWithSID();
         File result = libraryDoorWithSID.getLibraryDoorWithStudentID();
     }
-
 }
