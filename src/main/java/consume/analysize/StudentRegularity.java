@@ -25,7 +25,7 @@ public class StudentRegularity {
 
     private static String median = "_media.csv"; //中间处理文件.
 
-    private static String RegularityWithWork = "_regularityWithWork.csv";
+    private static String RegularityWithWork = "_regularityWithWork_TimeSelf.csv";
 
     private String style; //consume or librarydoor or dormdoor
 
@@ -120,15 +120,23 @@ public class StudentRegularity {
                     beforeType = null;
                 }
 
-                //连续的相同的行为，则以第一次刷卡的时间为准.
+
                 if(style.equals(LibraryDoorRegularity.LibraryStyle)){
                     if(((LibraryDoorWithSIDRecord)parser).getStatus().equals("out"))
                         continue;
                 }
-                if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 1)
-                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
-                        beforeTime,parser.getType());//根据策略的不同而有所不同.
-//                      continue;
+
+                //连续的相同的行为，则以第一次刷卡的时间为准.
+                if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 9) {
+//                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
+//                        beforeTime,parser.getType());//根据策略的不同而有所不同.
+
+                    //只计算天数.
+                    beforeTime = parser.getTime();
+                    beforeType = parser.getType();
+                    continue;
+                }
+
                 else {
                     regularityRecord.update(parser.getStudentID(), String.valueOf(parser.getTerm()),
                             parser.getTime(), parser.getType());

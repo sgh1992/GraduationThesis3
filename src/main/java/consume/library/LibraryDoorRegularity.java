@@ -1,8 +1,6 @@
 package consume.library;
 
-import consume.analysize.Cycle;
-import consume.analysize.StudentRegularity;
-import consume.analysize.WeekCycle;
+import consume.analysize.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +16,6 @@ public class LibraryDoorRegularity {
 
         StudentRegularity studentRegularity = new StudentRegularity(libraryDoorDataClean, cycle, new LibraryDoorWithSIDRecord(), LibraryStyle);
         return studentRegularity.regularity();
-
     }
 
     /**
@@ -30,7 +27,7 @@ public class LibraryDoorRegularity {
         LibraryDoorRegularity ldRegularity = new LibraryDoorRegularity();
         String libraryDoorDataClean = "D:\\GraduationThesis\\librarydoorWithStudentID_sorted.csv";
 
-        File result = ldRegularity.getLDRegularityFile(libraryDoorDataClean, new WeekCycle());
+        File result = ldRegularity.getLDRegularityFile(libraryDoorDataClean, new TimeCycle());
 
     }
 
