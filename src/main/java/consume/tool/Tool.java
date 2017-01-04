@@ -452,7 +452,15 @@ public class Tool {
         return workMap;
     }
 
+    public static boolean isSampleDay(String time1, String time2){
 
+        String[] args1 = time1.split(" ", -1);
+        String[] args2 = time2.split(" ", -1);
+        if(args1.length < 2 || args2.length < 2)
+            return false;
+        else
+            return args1[0].equals(args2[0]);
+    }
 
     /**
      * 测试

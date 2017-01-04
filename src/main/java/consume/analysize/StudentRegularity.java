@@ -25,7 +25,7 @@ public class StudentRegularity {
 
     private static String median = "_media.csv"; //中间处理文件.
 
-    private static String RegularityWithWork = "_regularityWithWork_TimeSelf.csv";
+    private static String RegularityWithWork = "_regularityWithWork_Week.csv";
 
     private String style; //consume or librarydoor or dormdoor
 
@@ -43,6 +43,7 @@ public class StudentRegularity {
     }
 
     public File regularity() throws IOException {
+
         File medianFile = regularityMedian();
         return regularityWithWork(medianFile);
     }
@@ -126,8 +127,23 @@ public class StudentRegularity {
                         continue;
                 }
 
-                //连续的相同的行为，则以第一次刷卡的时间为准.
-                if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 9) {
+
+                //连续的相同的行为，则以每天第一次刷卡的时间为准.
+//                if(str.equals("2010012010001,蒋毅,in,20110829 222710,通信与信息工程学院,2010,2")) {
+//                    System.err.println("Debug!");
+//                    beforeType.equals(parser.getType());
+//                    Tool.isSampleDay(beforeTime,parser.getTime());
+//                    String t1 = cycle.getInteral(beforeTime);
+//                    String t2 = cycle.getInteral(parser.getTime());
+//                    cycle.getInteral(beforeTime).equals(cycle.getInteral(parser.getTime()));
+//                }
+                if(beforeTime != null
+                        && beforeType.equals(parser.getType())
+                        && Tool.isSampleDay(beforeTime,parser.getTime())
+                        && cycle.getInteral(beforeTime) != null
+                        && cycle.getInteral(parser.getTime()) != null
+                        && cycle.getInteral(beforeTime).equals(cycle.getInteral(parser.getTime()))){
+//                if(beforeTime != null && parser.getType().equals(beforeType) && Tool.hoursBetween(beforeTime,parser.getTime()) < 9) {
 //                    regularityRecord.update(parser.getStudentID(),String.valueOf(parser.getTerm()),
 //                        beforeTime,parser.getType());//根据策略的不同而有所不同.
 

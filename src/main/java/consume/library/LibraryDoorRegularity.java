@@ -27,7 +27,7 @@ public class LibraryDoorRegularity {
         LibraryDoorRegularity ldRegularity = new LibraryDoorRegularity();
         String libraryDoorDataClean = "D:\\GraduationThesis\\librarydoorWithStudentID_sorted.csv";
 
-        File result = ldRegularity.getLDRegularityFile(libraryDoorDataClean, new TimeCycle());
+        File result = ldRegularity.getLDRegularityFile(libraryDoorDataClean, new WeekCycle());
 
     }
 
