@@ -25,7 +25,7 @@ public class LibraryDoorRegularity {
     public static void main(String[] args) throws IOException {
 
         LibraryDoorRegularity ldRegularity = new LibraryDoorRegularity();
-        String libraryDoorDataClean = "D:\\GraduationThesis\\librarydoorWithStudentID_sorted.csv";
+        String libraryDoorDataClean = "/home/sghipr/librarydoorWithStudentID_sorted.csv";
 
         File result = ldRegularity.getLDRegularityFile(libraryDoorDataClean, new WeekCycle());
 
