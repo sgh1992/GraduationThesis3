@@ -62,6 +62,7 @@ public class LibraryBookTypeTransfer {
             String type = getType(callNum,longText,typeMap);
             if(type == null){
                 missNums++;
+                System.err.println(callNum);
                 continue;
             }
 

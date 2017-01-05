@@ -338,7 +338,7 @@ public class Tool {
         DateTime start = format1.parseDateTime(startTime);
         int months = Months.monthsBetween(start,end).getMonths();
         term = months/6 + 1;
-        if(term <= 0)
+        if(term <= 0 || term > 8)
             return false;
 
         yearAndTerm.setYear(year);
@@ -347,78 +347,83 @@ public class Tool {
         return true;
     }
 
-    public static boolean getYearTerm(String sid,String time,YearAndTerm yearAndTerm,DateTimeFormatter format1){
-
-        if(sid.trim().length() < 8 || time.trim().length() != 8)
-            return false;
-
-        String year = null;
-        int term = 0;
-        String startTime = null;
-
-        DateTime end = null;
-        try {
-            end = format1.parseDateTime(time);
-        }catch (IllegalFieldValueException e){
-            System.err.println(time);
-            return false;
-        }
-
-        if(sid.startsWith("29") || sid.startsWith("2009")){
-            startTime = "20090901";
-            year = "2009";
-        }
-
-        else if(sid.startsWith("2010")){
-            startTime = "20100901";
-            year = "2010";
-        }
-
-        else if(sid.startsWith("2011")){
-            startTime = "20110901";
-            year = "2011";
-        }
-
-        else if(sid.startsWith("2012")){
-            startTime = "20120901";
-            year = "2012";
-        }
-
-        else if(sid.startsWith("2013")){
-            startTime = "20130901";
-            year = "2013";
-        }
-
-        else if(sid.startsWith("2014")){
-            startTime = "20140901";
-            year = "2014";
-        }
-
-        else if(sid.startsWith("2015")){
-            startTime = "20150901";
-            year = "2015";
-        }
-
-        else if(sid.startsWith("2016")){
-            startTime="20160901";
-            year = "2016";
-        }
-
-        else{
-            return false;
-        }
-
-        DateTime start = format1.parseDateTime(startTime);
-        int months = Months.monthsBetween(start,end).getMonths();
-        term = months/6 + 1;
-        if(term <= 0)
-            return false;
-
-        yearAndTerm.setYear(year);
-        yearAndTerm.setTerm(term);
-
-        return true;
-    }
+//    public static boolean getYearTerm(String sid,String time,YearAndTerm yearAndTerm,DateTimeFormatter format1){
+//
+//        if(sid.trim().length() < 8)
+//            return false;
+//
+//        String year = null;
+//        int term = 0;
+//        String startTime = null;
+//
+//        DateTime end = null;
+//        try {
+//            end = format1.parseDateTime(time);
+//        }catch (IllegalFieldValueException e){
+//            System.err.println(time);
+//            return false;
+//        }
+//
+//        if(sid.startsWith("29") || sid.startsWith("2009")){
+//            startTime = "20090901";
+//            year = "2009";
+//        }
+//
+//        else if(sid.startsWith("2010")){
+//            startTime = "20100901";
+//            year = "2010";
+//        }
+//
+//        else if(sid.startsWith("2011")){
+//            startTime = "20110901";
+//            year = "2011";
+//        }
+//
+//        else if(sid.startsWith("2012")){
+//            startTime = "20120901";
+//            year = "2012";
+//        }
+//
+//        else if(sid.startsWith("2013")){
+//            startTime = "20130901";
+//            year = "2013";
+//        }
+//
+//        else if(sid.startsWith("2014")){
+//            startTime = "20140901";
+//            year = "2014";
+//        }
+//
+//        else if(sid.startsWith("2015")){
+//            startTime = "20150901";
+//            year = "2015";
+//        }
+//
+//        else if(sid.startsWith("2016")){
+//            startTime="20160901";
+//            year = "2016";
+//        }
+//
+//        else{
+//            return false;
+//        }
+//
+//        try {
+//            DateTime start = format1.parseDateTime(startTime);
+//            int months = Months.monthsBetween(start,end).getMonths();
+//            term = months/6 + 1;
+//            if(term <= 0)
+//                return false;
+//        }catch (Exception e){
+//            return false;
+//        }
+//
+//
+//        yearAndTerm.setYear(year);
+//        yearAndTerm.setTerm(term);
+//
+//        return true;
+//    }
 
     public static String getDayOfWeek(String time){
 
