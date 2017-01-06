@@ -530,6 +530,32 @@ public class Tool {
         return workMap;
     }
 
+    public static File addWork(String file) throws IOException {
+
+        File root = new File(file);
+
+        File target = new File(root.getParent(),root.getName() + "_addWork.csv");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(root)));
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(target));
+
+        String str = null;
+
+        HashMap<String,String> workMap = getStudentWork();
+
+        while ((str = reader.readLine()) != null){
+            String studentID = str.split(",", -1)[0];
+            if(workMap.containsKey(studentID)){
+                writer.write(str + "," + workMap.get(studentID));
+                writer.newLine();
+            }
+        }
+        reader.close();
+        writer.close();
+        return target;
+    }
+
     public static boolean isSampleDay(String time1, String time2){
 
         String[] args1 = time1.split(" ", -1);
