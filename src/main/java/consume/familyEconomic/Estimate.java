@@ -4,9 +4,7 @@ import consume.tool.ConsumeRecord;
 import consume.tool.Tool;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sghipr on 2017/1/6.
@@ -88,6 +86,14 @@ public class Estimate {
                 result.append(amount).append(",");
             }
 
+            //每天的平均消费
+            for(int term : termList){
+                int day = getDay(studentID,term);
+                double amount = getAmount(studentID,term);
+                double average = day == 0 ? 0 : amount/day;
+                result.append(average).append(",");
+            }
+
             writer.write(result.substring(0,result.length() - 1));
             writer.newLine();
 
@@ -101,7 +107,7 @@ public class Estimate {
 
         private String studentID;
 
-        private String type;
+        private Set<String> typeSet;
 
         private HashMap<Integer, Double> amountMap;
 
@@ -109,7 +115,9 @@ public class Estimate {
 
         private BufferedWriter writer;
 
-        public ConsumeTypeAmount(String studentID, String type, BufferedWriter writer){
+        private String type;
+
+        public ConsumeTypeAmount(String studentID, String type, BufferedWriter writer,Set<String> set){
 
             this.studentID = studentID;
             this.type = type;
@@ -118,6 +126,7 @@ public class Estimate {
             for(int term = 1; term <= 8; term++)
                 termList.add(term);
             this.writer = writer;
+            this.typeSet = set;
         }
 
         public boolean update(String studentID,String type, int term, double amount){
@@ -126,7 +135,7 @@ public class Estimate {
                 return false;
             }
 
-            if(!type.equals(this.type))
+            if(!typeSet.contains(type))
                 return true;
 
             if(amountMap.containsKey(term))
@@ -196,17 +205,22 @@ public class Estimate {
 
         String str = null;
 
+        Set<String> messSet = new HashSet<>();
+        messSet.add("mess");
+
+        Set<String> supermarketSet = new HashSet<>();
+        supermarketSet.add("supermarket");
+        supermarketSet.add("snack");
+
         while ((str = reader.readLine()) != null){
 
             if(parser.parser(str)){
+
                 if(consumeDayAndAmount == null){
                     consumeDayAndAmount = new ConsumeDayAndAmount(parser.getStudentID(),parser.getTime(),dayAndSumWriter);
-                    messAmount = new ConsumeTypeAmount(parser.getStudentID(),"mess",messSumWrite);
-                    supermarketAmount = new ConsumeTypeAmount(parser.getStudentID(),"supermarket",supermarketWriter);
+                    messAmount = new ConsumeTypeAmount(parser.getStudentID(),"mess",messSumWrite,messSet);
+                    supermarketAmount = new ConsumeTypeAmount(parser.getStudentID(),"supermarket",supermarketWriter,supermarketSet);
                 }
-
-                if(parser.getStudentID().equals("201022120602"))
-                    System.err.println("Debug!");
 
                 if(!consumeDayAndAmount.contains(parser.getStudentID())){
                     consumeDayAndAmount.write();
@@ -214,8 +228,8 @@ public class Estimate {
                     supermarketAmount.write(consumeDayAndAmount);
 
                     consumeDayAndAmount = new ConsumeDayAndAmount(parser.getStudentID(),parser.getTime(),dayAndSumWriter);
-                    messAmount = new ConsumeTypeAmount(parser.getStudentID(),"mess",messSumWrite);
-                    supermarketAmount = new ConsumeTypeAmount(parser.getStudentID(),"supermarket",supermarketWriter);
+                    messAmount = new ConsumeTypeAmount(parser.getStudentID(),"mess",messSumWrite,messSet);
+                    supermarketAmount = new ConsumeTypeAmount(parser.getStudentID(),"supermarket",supermarketWriter,supermarketSet);
                 }
 
                 consumeDayAndAmount.update(parser.getStudentID(),parser.getTerm(),parser.getTime(),parser.getAmount());
@@ -240,8 +254,8 @@ public class Estimate {
         String dayAndAmount = "D:/GraduationThesis/consumeDayAndAmount.csv";
         String messAmount = "D:/GraduationThesis/consumeMess.csv";
         String supermarket = "D:/GraduationThesis/consumeSuperMarket.csv";
-//        Estimate estimate = new Estimate(cleanConsume,dayAndAmount,messAmount,supermarket);
-//        estimate.estimate();
+        Estimate estimate = new Estimate(cleanConsume,dayAndAmount,messAmount,supermarket);
+        estimate.estimate();
         Tool.addWork(dayAndAmount);
         Tool.addWork(messAmount);
         Tool.addWork(supermarket);
