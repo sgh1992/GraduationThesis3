@@ -1,7 +1,9 @@
 package grade.tool;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,6 +54,29 @@ public class Tool {
         return target;
     }
 
+    public static HashMap<String,Integer> getCourseMap(File refactorFile,int minNums) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(refactorFile)));
+        HashMap<String,Integer> counts = new HashMap<>();
+        String str = null;
+        StudentGradeRefactor parser = new StudentGradeRefactor();
+        while ((str = reader.readLine()) != null){
+            if(parser.parser(str) && parser.getRenovateGrade() == 0) {
+                int count = 1;
+                if (counts.containsKey(parser.getCourseNo()))
+                    count += counts.get(parser.getCourseNo());
+                counts.put(parser.getCourseNo(), count);
+            }
+        }
+        reader.close();
+        HashMap<String, Integer> courseIDs = new HashMap<>();
+        int id = 0;
+        for(Map.Entry<String,Integer> entry : counts.entrySet()){
+            if(entry.getValue() >= minNums)
+                courseIDs.put(entry.getKey(),id++);
+        }
+        return courseIDs;
+    }
+
     public static void main(String[] args) throws IOException {
 
         String grades = "D:\\GraduationThesis\\studentallgrade0.csv";
@@ -61,6 +86,4 @@ public class Tool {
         String year = "2010";
         File result = customiseGrade(grades,termSet,year);
     }
-
-
 }
