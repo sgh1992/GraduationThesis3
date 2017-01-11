@@ -1,5 +1,8 @@
 package grade.tool;
 
+import consume.dataClean.SortCleanData;
+import consume.tool.SortBase;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +15,8 @@ import java.util.Set;
 public class Tool {
 
     private static String Customise = "customiseGrade.csv";//定制的成绩记录.
+
+    private static String CLEANGRADES = "cleanGrades.csv";
 
     public static File customiseGrade(String grades, Set<Integer> termSet,String year) throws IOException {
 
@@ -76,6 +81,83 @@ public class Tool {
         }
         return courseIDs;
     }
+
+    public static HashMap<String,Set<Integer>> getStudentNums(File file,HashMap<String,Integer> courseMap) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        String str = null;
+        HashMap<String,Set<Integer>> studentsMap = new HashMap<>();
+        Set<Integer> set = null;
+        StudentGradeRefactor parser = new StudentGradeRefactor();
+        while ((str = reader.readLine()) != null){
+            if(parser.parser(str)){
+                if(studentsMap.containsKey(parser.getStudentID()))
+                    set = studentsMap.get(parser.getStudentID());
+                else
+                    set = new HashSet<>();
+                if(courseMap.containsKey(parser.getCourseNo())){
+                    set.add(courseMap.get(parser.getCourseNo()));
+                    studentsMap.put(parser.getStudentID(),set);
+                }
+                else{
+                    System.err.println("Course missing : " + parser.getCourseNo());
+                    continue;
+                }
+            }
+        }
+        reader.close();
+        return studentsMap;
+    }
+
+    public static File cleaned(File refactor,int minNums) throws IOException {
+
+        HashMap<String,Integer> courseMap = Tool.getCourseMap(refactor,minNums);
+
+        File cleaned = new File(refactor.getParent(),CLEANGRADES);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(cleaned));
+
+        String str = null;
+        StudentGradeRefactor parser = new StudentGradeRefactor();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(refactor)));
+        while ((str = reader.readLine()) != null){
+            if(parser.parser(str)){
+                if(courseMap.containsKey(parser.getCourseNo())){
+                    writer.write(str);
+                    writer.newLine();
+                }
+            }
+        }
+
+        reader.close();
+        return cleaned;
+
+    }
+
+    public static File sorted(File cleanedFile, String tempDir) throws IOException {
+
+        SortCleanData sortCleanData = new SortCleanData(cleanedFile.getAbsolutePath(),tempDir,new StudentGradeRefactor());
+        return sortCleanData.sort();
+
+    }
+
+    /**
+     * 对数据进行排序处理.
+     * @param grades
+     * @param termSet
+     * @param year
+     * @param minNums
+     * @param tempDir
+     * @return
+     * @throws IOException
+     */
+    public static File sorted(String grades, Set<Integer> termSet, String year, int minNums,String tempDir) throws IOException {
+
+        File refactors = customiseGrade(grades,termSet,year);
+        File cleaned = cleaned(refactors,minNums);
+        return sorted(cleaned,tempDir);
+    }
+
 
     public static void main(String[] args) throws IOException {
 
