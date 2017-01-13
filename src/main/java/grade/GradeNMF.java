@@ -5,6 +5,7 @@ import org.apache.mahout.math.*;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -120,6 +121,10 @@ public class GradeNMF {
         this.lamba = lamba;
     }
 
+    public File NMF() throws IOException {
+        return NMF(origialGrades,tempDir,minNums,termSet,year);
+    }
+
 
     /**
      * 非负矩阵分解.
@@ -143,11 +148,16 @@ public class GradeNMF {
         U = studentsMap.size();
 
         HashMap<String,Vector> PMatrix = new HashMap<>();
-        DenseMatrix QMatrix = new DenseMatrix(K,C);
+        DenseMatrix QMatrix = new DenseMatrix(C,K); //这里将之转置了.
+        for(int row = 0; row < QMatrix.rowSize(); row++)
+            for(int column = 0; column < QMatrix.columnSize(); column++)
+                QMatrix.set(row,column,Math.random()); //初始化为0~1之间的数值.
 
         //inital PMatrix
         for(String studentID : studentsMap.keySet()){
             DenseVector vector = new DenseVector(K);
+            for(int i = 0; i < K; i++)
+                vector.set(i,Math.random());
             PMatrix.put(studentID,vector);
         }
 
@@ -156,23 +166,25 @@ public class GradeNMF {
         StudentGradeRefactor parser = new StudentGradeRefactor();
         int iters = 0;
         double sumErrors = Double.MAX_VALUE;
-        while (iters++ < MAX || sumErrors > 1e-6){
+        while (iters++ < MAX && sumErrors > 1e-6){
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(sorted)));
             sumErrors = 0.0;
             while ((str = reader.readLine()) != null){
                 if(parser.parser(str) && courseMap.containsKey(parser.getCourseNo())){
                     Vector Pi = PMatrix.get(parser.getStudentID());
                     int courseNo = courseMap.get(parser.getCourseNo());
-                    Vector Qj = QMatrix.viewColumn(courseNo);
+                    Vector Qj = QMatrix.viewRow(courseNo);
                     int Iij = studentsMap.get(parser.getStudentID()).contains(courseNo) ? 1 : 0;
 
                     PiAndQj piAndQj = stochasticGradient(Pi,Qj,Iij,parser.getGrade());
                     sumErrors += Math.pow(piAndQj.getError(),2);
+                    //System.err.println(sumErrors);
 
                     PMatrix.put(parser.getStudentID(),piAndQj.getPi());
-                    QMatrix.assignColumn(courseNo,Qj);
+                    QMatrix.assignRow(courseNo,piAndQj.getQj());
                 }
             }
+            System.out.printf("Total error:%f,in iters:%d",sumErrors,iters);
             reader.close();
         }
 
@@ -192,6 +204,14 @@ public class GradeNMF {
     public PiAndQj stochasticGradient(Vector pi,Vector qj, int Iij, double scores){
 
         double error = scores - pi.dot(qj);
+        if(Double.isNaN(error))
+            System.err.println("Debug!");
+        if(Math.abs(error) > 1e+6) {
+            if(error > 0)
+                error = 1e+6;
+            else
+                error = -1e+6;
+        }
 
         //update pi
         Vector updatePi = qj.times(Iij * error).minus(pi.times(lamba));
@@ -203,4 +223,23 @@ public class GradeNMF {
         return new PiAndQj(updatePi,updateQj,error);
     }
 
+    public static void main(String[] args) throws IOException {
+
+        String origialGrades = "D:\\GraduationThesis\\studentallgrade0.csv";
+        String tempDir = "D:\\GraduationThesis\\gradeTemp";
+        int minNums = 30;
+        Set<Integer> termSet = new HashSet<>();
+        for(int term = 1; term <= 6; term++)
+            termSet.add(term);
+        String year = "2010";
+        int K = 12;
+
+        GradeNMF gradeNMF = new GradeNMF(origialGrades,tempDir,minNums,termSet,year,K);
+
+        //注意这些值的设定。太大了，会导致不收敛.
+        gradeNMF.setAlpha(0.0001);
+        gradeNMF.setLamba(1e-6);
+
+        File result = gradeNMF.NMF();
+    }
 }
