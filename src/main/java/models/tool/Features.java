@@ -8,7 +8,6 @@ import java.util.HashMap;
  */
 public class Features {
 
-
     class ConsumeClass{
 
         private String studentID;
@@ -18,6 +17,17 @@ public class Features {
         public ConsumeClass(String studentID){
             this.studentID = studentID;
             termTypeMap = new HashMap<>();
+
+
+
+
+
+
+
+
+
+
+
         }
 
         public String getStudentID(){
@@ -35,5 +45,11 @@ public class Features {
             typeMap.put(type,record);
             termTypeMap.put(term,typeMap);
         }
+
+
+
+
+
+
     }
 }
