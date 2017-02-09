@@ -57,6 +57,4 @@ public class LibraryDoorCombine {
         LibraryDoorCombine doorCombine = new LibraryDoorCombine();
         doorCombine.combine();
     }
-
-
 }

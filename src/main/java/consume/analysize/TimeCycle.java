@@ -38,7 +38,6 @@ public class TimeCycle implements Cycle{
         timeList.add("1930");
         timeList.add("2030");
         timeList.add("2200");
-
         return timeList;
     }
 

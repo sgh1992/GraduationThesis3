@@ -44,10 +44,4 @@ public class FeatureCombine {
         this.termSet = termSet;
         this.combines = combines;
     }
-
-
-
-
-
-
 }

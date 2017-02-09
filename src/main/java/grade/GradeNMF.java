@@ -239,7 +239,6 @@ public class GradeNMF {
         //注意这些值的设定。太大了，会导致不收敛.
         gradeNMF.setAlpha(0.0001);
         gradeNMF.setLamba(1e-6);
-
         File result = gradeNMF.NMF();
     }
 }

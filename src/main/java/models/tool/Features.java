@@ -17,17 +17,6 @@ public class Features {
         public ConsumeClass(String studentID){
             this.studentID = studentID;
             termTypeMap = new HashMap<>();
-
-
-
-
-
-
-
-
-
-
-
         }
 
         public String getStudentID(){
