@@ -46,6 +46,7 @@ public class AnalysizeBookBorrow {
             StringBuilder result = new StringBuilder();
             result.append(studentID).append(",");
             result.append(term).append(",");
+            result.append("librarybook").append(",");
             for(String bookType : bookTypeSet){
                 int count = counts.containsKey(bookType) ? counts.get(bookType) : 0;
                 result.append(count).append(",");
@@ -163,5 +164,4 @@ public class AnalysizeBookBorrow {
         AnalysizeBookBorrow analysizeBookBorrow = new AnalysizeBookBorrow(bookBorrows,bookTypes);
         File result = analysizeBookBorrow.analysize();
     }
-
 }

@@ -38,7 +38,6 @@ public class Estimate {
             termList = new ArrayList<>();
             for(int term = 1; term <= 8; term++)
                 termList.add(term);
-
         }
 
         public boolean update(String studentID,int term, String date, double amount){

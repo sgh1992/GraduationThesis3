@@ -534,7 +534,7 @@ public class Tool {
 
         File root = new File(file);
 
-        File target = new File(root.getParent(),root.getName() + "_addWork.csv");
+        File target = new File(root.getParent(),root.getName().substring(0,root.getName().indexOf(".")) + "_addWork.csv");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(root)));
 
@@ -544,8 +544,14 @@ public class Tool {
 
         HashMap<String,String> workMap = getStudentWork();
 
+
         while ((str = reader.readLine()) != null){
             String studentID = str.split(",", -1)[0];
+            if(studentID.startsWith("studentID")){
+                writer.write(str + "," + "work");
+                writer.newLine();
+                continue;
+            }
             if(workMap.containsKey(studentID)){
                 writer.write(str + "," + workMap.get(studentID));
                 writer.newLine();
