@@ -552,7 +552,7 @@ public class Tool {
                 writer.newLine();
                 continue;
             }
-            if(workMap.containsKey(studentID)){
+            if(workMap.containsKey(studentID) && !workMap.get(studentID).equals("国防生")){
                 writer.write(str + "," + workMap.get(studentID));
                 writer.newLine();
             }

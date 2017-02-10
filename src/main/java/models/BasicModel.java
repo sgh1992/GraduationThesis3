@@ -11,6 +11,4 @@ public class BasicModel {
     private AdaBoostM1 adaBoostM1;
 
     private Vector vector;
-
-
 }

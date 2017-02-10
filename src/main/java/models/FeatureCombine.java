@@ -208,12 +208,15 @@ public class FeatureCombine {
 
         String consumeRegularity = "D:\\GraduationThesis\\consumeRegularity_refactor.csv";
 
-        String combines = "D:\\GraduationThesis\\combineFeatures.csv";
+        String combines = "D:\\GraduationThesis\\combineFeatures1_2_3_4_5_6.csv";
 
         Set<Integer> termSet = new HashSet<>();
         termSet.add(1);
         termSet.add(2);
         termSet.add(3);
+        termSet.add(4);
+        termSet.add(5);
+        termSet.add(6);
 
         FeatureCombine featureCombine = new FeatureCombine(grades, librarybooks, dayAndAmount, messRate, supermarketRate, consumeRegularity, combines);
 
@@ -222,12 +225,6 @@ public class FeatureCombine {
         System.err.println(result.getPath());
         File addWork = Tool.addWork(result.getPath());
         System.err.println(addWork.getName());
-
     }
-
-
-
-
-
 
 }
