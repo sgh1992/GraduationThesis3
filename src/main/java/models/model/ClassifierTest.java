@@ -25,29 +25,31 @@ public class ClassifierTest {
 		
 		String removeStr = "";
 
-		int numModels = 4;
+		int numModels = 1;
 		
 		ModelMethod method = new ModelMethod(numModels);
+		method.setNumFolds(10);
+
 		
 		//Model 0
 		RandomForest randomForest = new RandomForest();
-		randomForest.setMaxDepth(5);
-		randomForest.setNumTrees(30);
-		randomForest.setNumFeatures(9);
+//		randomForest.setMaxDepth(5);
+//		randomForest.setNumTrees(30);
+//		randomForest.setNumFeatures(9);
 		method.setModel(randomForest, 0, removeStr);
 
 		//Model 1
-		REPTree repTree = new REPTree();
-		method.setModel(repTree, 1, removeStr);
-
-		//Model 2
-		AdaBoostM1 adaBoostM1 = new AdaBoostM1();
-		adaBoostM1.setClassifier(new DecisionStump());
-		method.setModel(adaBoostM1,2,removeStr);
-
-		//Model 3
-		SMO smo = new SMO();
-		method.setModel(smo,3,removeStr);
+//		REPTree repTree = new REPTree();
+//		method.setModel(repTree, 1, removeStr);
+//
+//		//Model 2
+//		AdaBoostM1 adaBoostM1 = new AdaBoostM1();
+//		adaBoostM1.setClassifier(new DecisionStump());
+//		method.setModel(adaBoostM1,2,removeStr);
+//
+//		//Model 3
+//		SMO smo = new SMO();
+//		method.setModel(smo,3,removeStr);
 
 		//Model 4
 //		MultilayerPerceptron multilayerPerceptron = new MultilayerPerceptron();
@@ -67,7 +69,7 @@ public class ClassifierTest {
 	public static void main(String[] args) throws Exception {
 
 		String removeStr = "1";
-		String dataFile = "D:\\GraduationThesis\\combineFeatures1_2_3_4_addWork.csv";
+		String dataFile = "D:\\GraduationThesis\\regularityModel.csv";
 
 		ClassifierTest classifierTest = new ClassifierTest(removeStr,dataFile);
 		classifierTest.modelRun();
